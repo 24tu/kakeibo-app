@@ -2,7 +2,11 @@
 
 ## 👉 [アプリを開く](https://24tu.github.io/kakeibo-app/)
 
+アドレス（右上のボタンでコピーできます）：
+
+```
 https://24tu.github.io/kakeibo-app/
+```
 
 スマホで開いたら「ホーム画面に追加」すると、アプリのように全画面で使えます。
 
