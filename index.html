@@ -103,7 +103,7 @@ button { cursor: pointer; }
 .up-row .n small { display: block; font-size: 12px; color: var(--muted); }
 
 .amount-field { display: flex; align-items: baseline; gap: 6px; border-bottom: 2px solid var(--accent); padding-bottom: 4px; }
-.amount-field input { border: 0; background: transparent; font-family: var(--font-display); font-size: 40px; width: 100%; min-width: 0; outline: none; }
+.field .amount-field input { border: 0; border-radius: 0; padding: 0; background: transparent; font-family: var(--font-display); font-size: 40px; width: 100%; min-width: 0; outline: none; }
 .amount-field span { font-size: 20px; color: var(--ink-2); }
 .chips { display: flex; flex-wrap: wrap; gap: 8px; }
 .chip { border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 6px 12px; font-size: 14px; }
@@ -165,6 +165,53 @@ nav.tabs button { background: none; border: 0; padding: 10px 0 12px; font-size: 
 nav.tabs button svg { width: 22px; height: 22px; }
 nav.tabs button[aria-selected="true"] { color: var(--accent); font-weight: 700; }
 
+/* 切り替えボタン */
+.seg { display: grid; grid-template-columns: 1fr 1fr; background: var(--track); border-radius: 10px; padding: 3px; gap: 3px; }
+.seg button { border: 0; background: transparent; border-radius: 8px; padding: 7px 0; font-size: 14px; color: var(--ink-2); }
+.seg button[aria-pressed="true"] { background: var(--surface); color: var(--ink); font-weight: 700; box-shadow: 0 1px 2px rgba(0,0,0,.1); }
+
+/* カレンダー */
+.cal { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 3px; }
+.cal .dow { text-align: center; font-size: 11px; color: var(--muted); padding-bottom: 2px; }
+.cal .dow.sun, .cal .day.sun .dn { color: var(--over); }
+.cal .dow.sat, .cal .day.sat .dn { color: var(--accent); }
+.cal .day { min-height: 58px; border-radius: 8px; border: 1px solid transparent; background: var(--bg); padding: 3px 3px 4px; text-align: left; display: grid; align-content: start; gap: 1px; min-width: 0; color: var(--ink); }
+.cal .day.blank { background: transparent; pointer-events: none; }
+.cal .day .dn { font-size: 12px; font-weight: 500; }
+.cal .day .v { font-size: 10px; line-height: 1.3; font-variant-numeric: tabular-nums; white-space: nowrap; overflow: hidden; }
+.cal .day .v.in { color: var(--ok); }
+.cal .day .v.plan { color: var(--muted); }
+.cal .day .v.ns { color: var(--ok); }
+.cal .day.h1 { background: color-mix(in srgb, var(--accent) 9%, var(--bg)); }
+.cal .day.h2 { background: color-mix(in srgb, var(--accent) 17%, var(--bg)); }
+.cal .day.h3 { background: color-mix(in srgb, var(--accent) 26%, var(--bg)); }
+.cal .day.h4 { background: color-mix(in srgb, var(--accent) 36%, var(--bg)); }
+.cal .day.today { border-color: var(--accent); }
+.cal .day[aria-pressed="true"] { outline: 2px solid var(--accent); outline-offset: -1px; }
+.heat-legend { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--muted); justify-content: flex-end; }
+.heat-legend i { width: 14px; height: 10px; border-radius: 3px; display: inline-block; }
+
+/* 推移グラフ */
+.trend { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; height: 150px; margin-top: 10px; }
+.trend .col { display: grid; grid-template-rows: 1fr auto; height: 100%; gap: 4px; background: none; border: 0; padding: 0; min-width: 0; }
+.trend .bars { display: flex; align-items: flex-end; justify-content: center; gap: 2px; height: 100%; border-bottom: 1px solid var(--line); }
+.trend .bars i { display: block; width: 42%; max-width: 18px; border-radius: 4px 4px 0 0; background: var(--accent); }
+.trend .bars i.inc { background: var(--ok); }
+.trend .m { font-size: 11px; color: var(--muted); text-align: center; }
+.trend .col[aria-pressed="true"] .m { color: var(--ink); font-weight: 700; }
+.trend .col[aria-pressed="true"] .bars { background: var(--track); border-radius: 6px 6px 0 0; }
+
+/* 収支・習慣 */
+.summary3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 8px; }
+.summary3 div { background: var(--bg); border-radius: 10px; padding: 8px 10px; min-width: 0; }
+.summary3 span { font-size: 12px; color: var(--muted); }
+.summary3 b { display: block; font-size: 16px; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.pos { color: var(--ok); }
+.neg { color: var(--over); }
+.habit-q { font-weight: 500; }
+.streak { font-size: 13px; color: var(--ink-2); }
+.tx .amt.inc { color: var(--ok); }
+
 .toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(80px + env(safe-area-inset-bottom, 0px)); background: var(--ink); color: var(--bg); padding: 10px 16px; border-radius: 10px; font-size: 14px; z-index: 6; max-width: calc(100% - 32px); }
 .empty { text-align: center; padding: 24px 8px; color: var(--ink-2); }
 .err { color: var(--over); font-size: 13px; }
@@ -202,12 +249,16 @@ nav.tabs button[aria-selected="true"] { color: var(--accent); font-weight: 700; 
   <section id="tab-add" class="stack" hidden>
     <div class="panel stack">
       <h2 id="addTitle">支出を記録</h2>
+      <div class="seg" role="group" aria-label="支出か収入か">
+        <button type="button" data-type="expense" aria-pressed="true">支出</button>
+        <button type="button" data-type="income" aria-pressed="false">収入</button>
+      </div>
       <div id="editFlag" class="edit-flag" hidden>記録を編集しています</div>
       <div class="field">
         <span class="label">金額</span>
         <div class="amount-field"><input id="amount" inputmode="numeric" autocomplete="off" placeholder="0" aria-label="金額（円）"><span>円</span></div>
       </div>
-      <div class="field">
+      <div class="field" id="methodField">
         <span class="label">支払い方法</span>
         <div id="methodChips" class="chips"></div>
       </div>
@@ -217,8 +268,9 @@ nav.tabs button[aria-selected="true"] { color: var(--accent); font-weight: 700; 
       </div>
       <div class="row2">
         <div class="field"><label class="label" for="date">日付</label><input id="date" type="date"></div>
-        <div class="field"><label class="label" for="shop">お店（任意）</label><input id="shop" autocomplete="off" placeholder="例：スーパー"></div>
+        <div class="field"><label class="label" for="shop" id="shopLabel">お店（任意）</label><input id="shop" autocomplete="off" placeholder="例：スーパー" list="shopList"></div>
       </div>
+      <datalist id="shopList"></datalist>
       <div class="field"><label class="label" for="memo">メモ（任意）</label><input id="memo" autocomplete="off"></div>
       <div class="btns">
         <button id="cancelEdit" class="btn ghost" hidden>やめる</button>
@@ -235,6 +287,8 @@ nav.tabs button[aria-selected="true"] { color: var(--accent); font-weight: 700; 
     <div id="fixedList"></div>
     <div class="panel stack" id="fixedFormPanel">
       <h2 id="fixedFormTitle">固定費を追加</h2>
+      <div class="field"><label class="label" for="fxType">種類</label>
+        <select id="fxType"><option value="expense">支出（家賃・スマホ代・サブスクなど）</option><option value="income">収入（給料など）</option></select></div>
       <div class="field"><label class="label" for="fxName">名前</label><input id="fxName" autocomplete="off" placeholder="例：家賃、スマホ代、Netflix"></div>
       <div class="row2">
         <div class="field"><label class="label" for="fxAmt">金額（円）</label><input id="fxAmt" inputmode="numeric" autocomplete="off" placeholder="0"></div>
@@ -303,7 +357,10 @@ nav.tabs button[aria-selected="true"] { color: var(--accent); font-weight: 700; 
 // ---------- 定数 ----------
 const BASE_CATS = ["食料品・日用品", "外食", "コンビニ・売店", "交通費", "車", "買い物", "レジャー", "趣味・娯楽",
   "プレゼント・交際費", "ドラッグストア", "住居", "通信費", "水道光熱費", "サブスク", "保険", "ウォーターサーバー", "その他"];
+const INCOME_CATS = ["給料", "賞与", "臨時収入", "その他収入"];
 const DEFAULT_METHODS = ["現金", "PayPay", "PayPayカード", "楽天カード", "オリコカード", "イオンカード", "三井住友カード"];
+const NEED_VERSION = 3;   // このアプリに必要なスプレッドシート側（Apps Script）の版
+const WEEK = ["日", "月", "火", "水", "木", "金", "土"];
 const KEY = { cfg: "kakeibo.cfg", cache: "kakeibo.cache2", ops: "kakeibo.ops", lastMethod: "kakeibo.lastMethod" };
 const MATCH_DAYS = 4;   // カード明細と手入力を同じ支払いとみなす日付のずれ
 
@@ -328,8 +385,9 @@ const state = {
   syncedAt: cached?.syncedAt || null,
   loaded: !!cached, loadError: null, oldServer: false,
   listFilter: null, confirm: null,
+  listView: load("kakeibo.listView", "calendar"), selectedDay: null,
 };
-let pickedCat = "食料品・日用品", pickedMethod = load(KEY.lastMethod, "現金");
+let pickedType = "expense", pickedCat = "食料品・日用品", pickedMethod = load(KEY.lastMethod, "現金");
 let editingTx = null, editingFixed = null, budgetDirty = false, methodsDraft = null;
 
 // ---------- 小さな道具 ----------
@@ -378,12 +436,11 @@ async function refresh(quiet) {
   await flushOps();
   try {
     const j = await api("load");
+    state.oldServer = !j.version || j.version < NEED_VERSION;
     if (!j.version) {               // 第1版のままのスプレッドシート
-      state.oldServer = true;
       state.tx = (j.cash || []).map(c => ({ ...c, method: "現金" }));
       state.cards = []; state.fixed = []; state.budget = j.budget || {};
     } else {
-      state.oldServer = false;
       state.tx = j.tx; state.fixed = j.fixed; state.cards = j.cards; state.budget = j.budget;
       if (j.methods) state.methods = j.methods;
     }
@@ -445,6 +502,7 @@ function fixedOccurrences(months) {
       out.push({
         key: `f:${f.id}:${m}`, fixedId: f.id, date: `${m}-${String(day).padStart(2, "0")}`, month: m,
         shop: f.name, amt: Number(f.amt), cat: f.cat || "その他", method: f.method || "現金", memo: f.memo, kind: "fixed",
+        type: f.type === "income" ? "income" : "expense",
       });
     });
   });
@@ -467,19 +525,21 @@ function buildEntries() {
   for (let m = all[0]; m <= shiftMonth(monthKey(today), 1); m = shiftMonth(m, 1)) months.push(m);
 
   const manual = [
-    ...state.tx.map(t => ({ key: t.id, id: t.id, date: t.date, month: monthKey(t.date), shop: t.shop || t.cat, amt: Number(t.amt),
-      cat: t.cat || "その他", method: t.method || "現金", memo: t.memo, kind: "tx" })),
+    ...state.tx.filter(t => t.type !== "nospend").map(t => ({ key: t.id, id: t.id, date: t.date, month: monthKey(t.date),
+      shop: t.shop || t.cat, amt: Number(t.amt), cat: t.cat || "その他", method: t.method || "現金", memo: t.memo, kind: "tx",
+      type: t.type === "income" ? "income" : "expense" })),
     ...fixedOccurrences(months),
   ];
   const cards = state.cards.map((c, n) => ({ key: "c" + n, date: c.d || "", month: c.month, shop: c.shop, amt: Number(c.amt),
-    cat: c.cat || "その他", method: c.card, card: c.card, via: c.via, installment: c.kind && c.kind !== "1回" ? c.kind : null, kind: "card" }));
+    cat: c.cat || "その他", method: c.card, card: c.card, via: c.via, installment: c.kind && c.kind !== "1回" ? c.kind : null,
+    kind: "card", type: "expense" }));
 
   const matched = new Set();
   cards.forEach(c => {
     if (c.installment || !c.date) return;
     let best = null, bestDiff = Infinity;
     manual.forEach(m => {
-      if (matched.has(m.key) || m.amt !== c.amt || !sameMethod(m.method, c)) return;
+      if (m.type !== "expense" || matched.has(m.key) || m.amt !== c.amt || !sameMethod(m.method, c)) return;
       const diff = Math.abs(dayDiff(m.date, c.date));
       if (diff <= MATCH_DAYS && diff < bestDiff) { best = m; bestDiff = diff; }
     });
@@ -500,11 +560,31 @@ function sumBy(list, field) {
   list.forEach(t => m.set(t[field], (m.get(t[field]) || 0) + t.amt));
   return [...m.entries()].sort((a, b) => b[1] - a[1]);
 }
+const isExp = e => e.type === "expense";
+const isInc = e => e.type === "income";
+const sumAmt = list => list.reduce((a, e) => a + e.amt, 0);
+function compactYen(n) {
+  if (n >= 100000) return Math.round(n / 10000) + "万";
+  if (n >= 10000) return (Math.round(n / 1000) / 10) + "万";
+  return Math.round(n).toLocaleString("ja-JP");
+}
+function dayLabel(iso) { const d = new Date(iso + "T00:00:00"); return `${d.getMonth() + 1}月${d.getDate()}日（${WEEK[d.getDay()]}）`; }
+// 毎日の記録が何日続いているか（今日まだなら昨日まで）
+function streakDays() {
+  const days = new Set(state.tx.map(t => t.date));
+  const d = new Date(todayISO() + "T00:00:00");
+  const iso = () => { const x = new Date(d); x.setMinutes(x.getMinutes() - x.getTimezoneOffset()); return x.toISOString().slice(0, 10); };
+  if (!days.has(iso())) d.setDate(d.getDate() - 1);
+  let n = 0;
+  while (days.has(iso())) { n++; d.setDate(d.getDate() - 1); }
+  return n;
+}
 function allCats() {
   const s = new Set(BASE_CATS);
+  const expenseOnly = r => r.type !== "income" && r.type !== "nospend";
   state.cards.forEach(i => i.cat && s.add(i.cat));
-  state.tx.forEach(c => c.cat && s.add(c.cat));
-  state.fixed.forEach(c => c.cat && s.add(c.cat));
+  state.tx.filter(expenseOnly).forEach(c => c.cat && s.add(c.cat));
+  state.fixed.filter(expenseOnly).forEach(c => c.cat && s.add(c.cat));
   Object.keys(state.budget).forEach(c => s.add(c));
   s.delete("その他"); return [...s, "その他"];
 }
@@ -531,7 +611,7 @@ function render() {
     : "まだ読み込んでいません";
 
   const monthEntries = entries.filter(e => e.month === state.month);
-  renderHome(monthEntries);
+  renderHome(monthEntries, entries);
   renderList(monthEntries);
   renderAddForm();
   renderFixed();
@@ -540,16 +620,31 @@ function render() {
   updateSyncBadge();
 }
 
-function renderHome(list) {
+function renderHome(list, all) {
   const el = $("tab-home");
   if (!state.loaded) { el.innerHTML = `<div class="panel empty">${state.loadError ? esc(state.loadError) : "読み込み中…"}</div>`; return; }
 
-  const spentList = list.filter(e => !e.future), planList = list.filter(e => e.future);
-  const spent = spentList.reduce((a, e) => a + e.amt, 0);
-  const planned = planList.reduce((a, e) => a + e.amt, 0);
+  const exp = list.filter(isExp), inc = list.filter(isInc);
+  const spentList = exp.filter(e => !e.future), planList = exp.filter(e => e.future);
+  const spent = sumAmt(spentList), planned = sumAmt(planList);
   const budgetTotal = Object.values(state.budget).reduce((a, b) => a + (+b || 0), 0);
-  const isThisMonth = state.month === monthKey(todayISO());
+  const today = todayISO(), isThisMonth = state.month === monthKey(today);
 
+  // 今日の記録（毎日の習慣）
+  let habit = "";
+  if (isThisMonth) {
+    const streak = streakDays();
+    const doneToday = state.tx.some(t => t.date === today);
+    habit = doneToday
+      ? `<p class="streak">✓ 今日の記録は済んでいます${streak >= 2 ? `。${streak}日続けて記録しています` : ""}</p>`
+      : `<div class="panel stack" style="gap:10px">
+          <div class="habit-q">今日の支出は記録しましたか？</div>
+          ${streak ? `<div class="streak">昨日まで${streak}日続けて記録しています</div>` : ""}
+          <div class="btns"><button class="btn small" data-tab="add" style="flex:1">記録する</button><button class="btn small ghost" data-nospend style="flex:1">今日は使わなかった</button></div>
+        </div>`;
+  }
+
+  // 予算
   let budgetHtml;
   if (budgetTotal > 0) {
     const left = budgetTotal - spent - planned, over = left < 0;
@@ -560,7 +655,7 @@ function renderHome(list) {
       <div class="meter ${over ? "over" : ""}"><div style="width:${wSpent}%"></div>${wPlan > 0 ? `<div class="plan" style="width:${wPlan}%"></div>` : ""}</div>
       ${planned ? `<div class="legend"><span><i style="background:var(--accent)"></i>使った額</span><span><i style="background:var(--plan)"></i>これからの固定費</span></div>` : ""}`;
     if (isThisMonth) {
-      const now = new Date(), daysLeft = lastDay(state.month) - now.getDate() + 1;
+      const daysLeft = lastDay(state.month) - new Date().getDate() + 1;
       budgetHtml += over
         ? `<div class="perday over">固定費の予定を含めると、今月は予算を超えます。ここからは必要なものだけにしましょう。</div>`
         : `<div class="perday">月末まであと${daysLeft}日。1日あたり <strong class="num">${yen(left / daysLeft)}</strong> 使えます</div>`;
@@ -568,31 +663,75 @@ function renderHome(list) {
   } else {
     budgetHtml = `<p class="note" style="margin-top:10px">「設定」タブで予算を決めると、残りの金額と1日あたり使える額が出ます。</p>`;
   }
-
   const sources = sumBy(spentList, "method").map(([s, a]) => `<span>${esc(s)} <b class="num">${yen(a)}</b></span>`).join("");
 
-  const upcoming = planList.slice().sort((a, b) => a.date.localeCompare(b.date)).map(e => `
-    <div class="up-row"><span class="d num">${shortDate(e.date)}</span><span class="n">${esc(e.shop)}<small>${esc(e.method)}・${esc(e.cat)}</small></span><span class="num">${yen(e.amt)}</span></div>`).join("");
+  // 収支
+  const incAll = sumAmt(inc), expAll = spent + planned, rest = incAll - expAll;
+  const anyPlan = planned > 0 || inc.some(e => e.future);
+  const hasIncomeEver = state.tx.some(t => t.type === "income") || state.fixed.some(f => f.type === "income");
+  const balance = inc.length
+    ? `<div class="panel">
+        <h2>収支${anyPlan ? `<span class="note" style="font-family:var(--font-body);font-weight:400">（予定を含む見込み）</span>` : ""}</h2>
+        <div class="summary3">
+          <div><span>収入</span><b class="pos">${yen(incAll)}</b></div>
+          <div><span>支出</span><b>${yen(expAll)}</b></div>
+          <div><span>残るお金</span><b class="${rest >= 0 ? "pos" : "neg"}">${rest < 0 ? "−" : ""}${yen(Math.abs(rest))}</b></div>
+        </div>
+      </div>`
+    : (hasIncomeEver ? "" : `<p class="note">給料などの収入も記録すると、毎月いくら残ったかがわかります（「記録」の「収入」、または固定費に登録）。</p>`);
 
+  // 支払い予定
+  const upcoming = list.filter(e => e.future).sort((a, b) => a.date.localeCompare(b.date)).map(e => `
+    <div class="up-row"><span class="d num">${shortDate(e.date)}</span><span class="n">${esc(e.shop)}<small>${isInc(e) ? "収入" : esc(e.method)}・${esc(e.cat)}</small></span><span class="num ${isInc(e) ? "pos" : ""}">${isInc(e) ? "+" : ""}${yen(e.amt)}</span></div>`).join("");
+
+  // カテゴリ別（先月との比較つき）
+  const prevKey = shiftMonth(state.month, -1);
+  const prevByCat = new Map(sumBy(all.filter(e => e.month === prevKey && isExp(e)), "cat"));
+  const hasPrev = prevByCat.size > 0;
   const cats = new Map();
-  list.forEach(e => { const c = cats.get(e.cat) || { spent: 0, plan: 0 }; e.future ? (c.plan += e.amt) : (c.spent += e.amt); cats.set(e.cat, c); });
+  exp.forEach(e => { const c = cats.get(e.cat) || { spent: 0, plan: 0 }; e.future ? (c.plan += e.amt) : (c.spent += e.amt); cats.set(e.cat, c); });
   Object.keys(state.budget).forEach(c => { if (+state.budget[c] > 0 && !cats.has(c)) cats.set(c, { spent: 0, plan: 0 }); });
   const catList = [...cats.entries()].sort((a, b) => (b[1].spent + b[1].plan) - (a[1].spent + a[1].plan));
   const maxAmt = Math.max(1, ...catList.map(([, v]) => v.spent + v.plan));
-  const total = spent + planned;
   const rows = catList.map(([cat, v]) => {
-    const amt = v.spent + v.plan, b = +state.budget[cat] || 0, base = b > 0 ? Math.max(b, 1) : maxAmt;
+    const amt = v.spent + v.plan, b = +state.budget[cat] || 0, base = b > 0 ? b : maxAmt;
     const over = b > 0 && amt > b;
     const ws = Math.min(v.spent / base, 1) * 100, wp = Math.max(0, Math.min(amt / base, 1) * 100 - ws);
-    const planNote = v.plan ? `うち予定 ${yen(v.plan)}` : "";
+    const bits = [b > 0 ? `予算 ${yen(b)}` : `${expAll ? Math.round(amt / expAll * 100) : 0}%`];
+    if (v.plan) bits.push(`うち予定 ${yen(v.plan)}`);
+    if (hasPrev) {
+      const diff = amt - (prevByCat.get(cat) || 0);
+      if (diff) bits.push(`<span class="${diff > 0 ? "neg" : "pos"}">先月比 ${diff > 0 ? "+" : "−"}${yen(Math.abs(diff))}</span>`);
+    }
     const right = b > 0 ? (over ? `<span class="warn">! ${yen(amt - b)} オーバー</span>` : `<span>あと ${yen(b - amt)}</span>`) : `<span>予算なし</span>`;
-    const left = b > 0 ? `予算 ${yen(b)}${planNote ? "・" + planNote : ""}` : `${total ? Math.round(amt / total * 100) : 0}%${planNote ? "・" + planNote : ""}`;
     return `<div class="cat-row"><span class="name">${esc(cat)}</span><span class="amt num">${yen(amt)}</span>
       <div class="bar ${over ? "over" : ""}"><div style="width:${ws}%"></div>${wp > 0 ? `<div class="plan" style="width:${wp}%"></div>` : ""}</div>
-      <div class="sub"><span>${left}</span>${right}</div></div>`;
+      <div class="sub"><span>${bits.join("・")}</span>${right}</div></div>`;
   }).join("");
 
+  // 月ごとの推移（直近6か月）
+  const trendMonths = Array.from({ length: 6 }, (_, i) => shiftMonth(state.month, i - 5));
+  const trend = trendMonths.map(m => {
+    const ms = all.filter(e => e.month === m);
+    return { m, exp: sumAmt(ms.filter(isExp)), inc: sumAmt(ms.filter(isInc)) };
+  });
+  const tMax = Math.max(1, ...trend.map(t => Math.max(t.exp, t.inc)));
+  const showInc = trend.some(t => t.inc > 0);
+  const cur = trend[5];
+  const trendHtml = `
+    <div class="panel">
+      <h2>月ごとの推移</h2>
+      ${showInc ? `<div class="legend"><span><i style="background:var(--accent)"></i>支出</span><span><i style="background:var(--ok)"></i>収入</span></div>` : ""}
+      <div class="trend" role="group" aria-label="直近6か月の支出${showInc ? "と収入" : ""}">
+        ${trend.map(t => `<button class="col" data-month-jump="${t.m}" aria-pressed="${t.m === state.month}" aria-label="${monthLabel(t.m)} 支出${yen(t.exp)}${showInc ? ` 収入${yen(t.inc)}` : ""}">
+          <span class="bars"><i style="height:${t.exp / tMax * 100}%"></i>${showInc ? `<i class="inc" style="height:${t.inc / tMax * 100}%"></i>` : ""}</span>
+          <span class="m">${+t.m.slice(5)}月</span></button>`).join("")}
+      </div>
+      <p class="note" style="margin-top:8px">${monthLabel(cur.m)}：支出 <b class="num">${yen(cur.exp)}</b>${showInc ? `・収入 <b class="num">${yen(cur.inc)}</b>` : ""}${trend[4].exp ? `（先月より ${cur.exp >= trend[4].exp ? "+" : "−"}${yen(Math.abs(cur.exp - trend[4].exp))}）` : ""}。棒をタップするとその月を表示します。</p>
+    </div>`;
+
   el.innerHTML = `
+    ${habit}
     <div class="panel">
       <div class="label">${monthLabel(state.month)}に使ったお金</div>
       <div class="hero-total num">${Math.round(spent).toLocaleString("ja-JP")}<small>円</small></div>
@@ -600,78 +739,157 @@ function renderHome(list) {
       ${budgetHtml}
       <div class="sources">${sources || `<span>まだ記録がありません</span>`}</div>
     </div>
-    ${upcoming ? `<div class="panel"><h2 style="margin-bottom:6px">これからの支払い予定</h2>${upcoming}</div>` : ""}
+    ${balance}
+    ${upcoming ? `<div class="panel"><h2 style="margin-bottom:6px">これからの予定</h2>${upcoming}</div>` : ""}
     <div class="panel">
       <h2 style="margin-bottom:6px">カテゴリ別</h2>
       ${rows || `<div class="empty">この月の支出はまだありません。<br>「記録」タブから入力できます。</div>`}
     </div>
+    ${trendHtml}
     <p class="note">使った日の月で数えます（カードの分割払いだけは引き落とし月）。カード明細を取り込むと、手入力や固定費と同じ支払いは自動で1件にまとめます。</p>`;
+}
+
+// 明細の1行
+function txRow(t) {
+  const tags = [];
+  if (isInc(t)) tags.push(`<span class="tag ok">収入</span>`);
+  else tags.push(`<span class="tag">${esc(t.method)}</span>`);
+  if (t.kind === "tx") tags.push(`<span class="tag me">手入力</span>`);
+  if (t.kind === "fixed") tags.push(`<span class="tag me">固定費</span>`);
+  if (t.future) tags.push(`<span class="tag plan">予定</span>`);
+  if (t.matched) tags.push(`<span class="tag ok">✓ ${t.matched.kind === "fixed" ? "固定費" : "手入力"}と照合</span>`);
+  if (t.installment) tags.push(`<span class="tag">${esc(t.installment)}</span>`);
+  if (t.kind === "tx" && ops.some(o => o.rec?.id === t.id)) tags.push(`<span class="tag plan">未送信</span>`);
+
+  let actions = "";
+  if (t.kind === "tx") {
+    actions = state.confirm === t.key
+      ? `<span class="note">削除しますか？</span><button class="linkish danger" data-del-tx="${esc(t.id)}">削除する</button><button class="linkish" data-confirm="">やめる</button>`
+      : `<button class="linkish accent" data-edit-tx="${esc(t.id)}">編集</button><button class="linkish" data-confirm="${esc(t.key)}">削除</button>`;
+  } else if (t.kind === "fixed") {
+    actions = `<button class="linkish accent" data-goto-fixed="${esc(t.fixedId)}">固定費を編集</button>`;
+  }
+  const title = t.fixedName && t.fixedName !== t.shop ? `${t.shop}（${t.fixedName}）` : t.shop;
+  return `<div class="tx ${t.future ? "future" : ""}">
+    <div class="shop">${esc(title)}
+      <div class="meta"><span class="num">${esc(shortDate(t.date))}</span>${tags.join("")}<span>${esc(t.cat)}</span>${t.memo ? `<span>${esc(t.memo)}</span>` : ""}</div>
+    </div>
+    <div class="amt num ${isInc(t) ? "inc" : ""}">${isInc(t) ? "+" : ""}${yen(t.amt)}</div>${actions ? `<div class="actions">${actions}</div>` : ""}</div>`;
 }
 
 function renderList(list) {
   const el = $("tab-list");
   if (!state.loaded) { el.innerHTML = `<div class="panel empty">読み込み中…</div>`; return; }
+  const seg = `<div class="seg" role="group" aria-label="表示の切り替え">
+    <button data-view="calendar" aria-pressed="${state.listView === "calendar"}">カレンダー</button>
+    <button data-view="list" aria-pressed="${state.listView === "list"}">一覧</button></div>`;
+  el.innerHTML = seg + (state.listView === "calendar" ? calendarHtml(list) : listHtml(list));
+}
+
+function calendarHtml(list) {
+  const m = state.month, today = todayISO();
+  const [y, mo] = m.split("-").map(Number);
+  const first = new Date(y, mo - 1, 1).getDay(), days = lastDay(m);
+  if (!state.selectedDay || monthKey(state.selectedDay) !== m) state.selectedDay = monthKey(today) === m ? today : null;
+
+  const byDay = {};
+  list.forEach(e => {
+    if (!e.date || monthKey(e.date) !== m) return;
+    const d = byDay[e.date] ||= { exp: 0, plan: 0, inc: 0 };
+    if (isInc(e)) d.inc += e.amt; else if (e.future) d.plan += e.amt; else d.exp += e.amt;
+  });
+  const noSpend = new Set(state.tx.filter(t => t.type === "nospend" && monthKey(t.date) === m).map(t => t.date));
+  const max = Math.max(1, ...Object.values(byDay).map(d => d.exp));
+
+  const cells = WEEK.map((w, i) => `<div class="dow ${i === 0 ? "sun" : i === 6 ? "sat" : ""}">${w}</div>`);
+  for (let i = 0; i < first; i++) cells.push(`<div class="day blank"></div>`);
+  for (let day = 1; day <= days; day++) {
+    const iso = `${m}-${String(day).padStart(2, "0")}`, wd = (first + day - 1) % 7, d = byDay[iso];
+    const lv = d?.exp ? Math.min(4, Math.ceil(d.exp / max * 4)) : 0;
+    const vals = [];
+    if (d?.exp) vals.push(`<span class="v">${compactYen(d.exp)}</span>`);
+    if (d?.plan) vals.push(`<span class="v plan">予${compactYen(d.plan)}</span>`);
+    if (d?.inc) vals.push(`<span class="v in">+${compactYen(d.inc)}</span>`);
+    if (!d?.exp && noSpend.has(iso)) vals.push(`<span class="v ns">0円</span>`);
+    const label = `${dayLabel(iso)} 支出${yen(d?.exp || 0)}${d?.plan ? ` 予定${yen(d.plan)}` : ""}${d?.inc ? ` 収入${yen(d.inc)}` : ""}`;
+    cells.push(`<button class="day ${lv ? "h" + lv : ""} ${wd === 0 ? "sun" : wd === 6 ? "sat" : ""} ${iso === today ? "today" : ""}" data-day="${iso}" aria-pressed="${iso === state.selectedDay}" aria-label="${label}">
+      <span class="dn">${day}</span>${vals.join("")}</button>`);
+  }
+
+  const spentDays = Object.values(byDay).filter(d => d.exp > 0).length;
+  const elapsed = monthKey(today) === m ? new Date().getDate() : (m < monthKey(today) ? days : 0);
+  const zeroDays = elapsed ? [...Array(elapsed)].filter((_, i) => !byDay[`${m}-${String(i + 1).padStart(2, "0")}`]?.exp).length : 0;
+  const exp = sumAmt(list.filter(e => isExp(e) && !e.future));
+
+  let dayPanel;
+  if (state.selectedDay) {
+    const sel = list.filter(e => e.date === state.selectedDay).sort((a, b) => b.amt - a.amt);
+    const ns = state.tx.find(t => t.type === "nospend" && t.date === state.selectedDay);
+    dayPanel = `<div class="panel">
+      <div class="budget-line" style="margin:0 0 6px"><b>${dayLabel(state.selectedDay)}</b><strong class="num">${yen(sumAmt(sel.filter(isExp)))}</strong></div>
+      ${sel.map(txRow).join("") || `<div class="empty">${ns ? "この日は「使わなかった日」として記録しています" : "この日の記録はありません"}</div>`}
+      <div class="btns" style="margin-top:10px">
+        ${ns ? `<button class="btn small ghost" data-del-tx="${esc(ns.id)}">「使わなかった日」を取り消す</button>` : ""}
+        <button class="btn small" data-add-on="${state.selectedDay}">この日の記録を追加</button>
+      </div></div>`;
+  } else {
+    dayPanel = `<p class="note">日付をタップすると、その日の明細が出ます。</p>`;
+  }
+
+  return `<div class="panel stack" style="gap:8px">
+      <div class="cal">${cells.join("")}</div>
+      <div class="heat-legend">少<i class="h-l" style="background:var(--bg)"></i>${[9, 17, 26, 36].map(p => `<i style="background:color-mix(in srgb, var(--accent) ${p}%, var(--bg))"></i>`).join("")}多</div>
+      <div class="budget-line" style="margin:0"><span>支出があった日 ${spentDays}日${elapsed ? `・使わなかった日 ${zeroDays}日` : ""}</span><span>1日平均 <b class="num">${yen(elapsed ? exp / elapsed : 0)}</b></span></div>
+    </div>
+    ${dayPanel}`;
+}
+
+function listHtml(list) {
   const cats = sumBy(list, "cat").map(c => c[0]);
   if (state.listFilter && !cats.includes(state.listFilter)) state.listFilter = null;
   const shown = list.filter(t => !state.listFilter || t.cat === state.listFilter)
     .sort((a, b) => (b.date || "").localeCompare(a.date || "") || b.amt - a.amt);
-
   const chips = [`<button class="chip" data-filter="" aria-pressed="${!state.listFilter}">すべて</button>`,
     ...cats.map(c => `<button class="chip" data-filter="${esc(c)}" aria-pressed="${state.listFilter === c}">${esc(c)}</button>`)].join("");
-
-  const rows = shown.map(t => {
-    const tags = [`<span class="tag">${esc(t.method)}</span>`];
-    if (t.kind === "tx") tags.push(`<span class="tag me">手入力</span>`);
-    if (t.kind === "fixed") tags.push(`<span class="tag me">固定費</span>`);
-    if (t.future) tags.push(`<span class="tag plan">予定</span>`);
-    if (t.matched) tags.push(`<span class="tag ok">✓ ${t.matched.kind === "fixed" ? "固定費" : "手入力"}と照合</span>`);
-    if (t.installment) tags.push(`<span class="tag">${esc(t.installment)}</span>`);
-    const pendingOp = t.kind === "tx" && ops.some(o => o.rec?.id === t.id);
-    if (pendingOp) tags.push(`<span class="tag plan">未送信</span>`);
-
-    let actions = "";
-    if (t.kind === "tx") {
-      actions = state.confirm === t.key
-        ? `<span class="note">削除しますか？</span><button class="linkish danger" data-del-tx="${esc(t.id)}">削除する</button><button class="linkish" data-confirm="">やめる</button>`
-        : `<button class="linkish accent" data-edit-tx="${esc(t.id)}">編集</button><button class="linkish" data-confirm="${esc(t.key)}">削除</button>`;
-    } else if (t.kind === "fixed") {
-      actions = `<button class="linkish accent" data-goto-fixed="${esc(t.fixedId)}">固定費を編集</button>`;
-    }
-    const title = t.fixedName && t.fixedName !== t.shop ? `${t.shop}（${t.fixedName}）` : t.shop;
-    return `<div class="tx ${t.future ? "future" : ""}">
-      <div class="shop">${esc(title)}
-        <div class="meta"><span class="num">${esc(shortDate(t.date))}</span>${tags.join("")}<span>${esc(t.cat)}</span>${t.memo ? `<span>${esc(t.memo)}</span>` : ""}</div>
-      </div>
-      <div class="amt num">${yen(t.amt)}</div>${actions ? `<div class="actions">${actions}</div>` : ""}</div>`;
-  }).join("");
-
-  const sum = shown.reduce((a, t) => a + t.amt, 0);
-  el.innerHTML = `
+  const expSum = sumAmt(shown.filter(isExp)), incSum = sumAmt(shown.filter(isInc));
+  return `
     <div class="chips">${chips}</div>
     <div class="panel">
-      <div class="budget-line" style="margin:0 0 6px"><span>${shown.length}件</span><strong class="num">${yen(sum)}</strong></div>
-      ${rows || `<div class="empty">この月の明細はまだありません</div>`}
+      <div class="budget-line" style="margin:0 0 6px"><span>${shown.length}件</span><span>支出 <strong class="num">${yen(expSum)}</strong>${incSum ? `・収入 <strong class="num pos">${yen(incSum)}</strong>` : ""}</span></div>
+      ${shown.map(txRow).join("") || `<div class="empty">この月の明細はまだありません</div>`}
     </div>`;
 }
 
 function renderAddForm() {
+  const income = pickedType === "income";
+  document.querySelectorAll("[data-type]").forEach(b => b.setAttribute("aria-pressed", b.dataset.type === pickedType));
   if (!methods().includes(pickedMethod)) pickedMethod = methods()[0];
+  $("methodField").hidden = income;
   $("methodChips").innerHTML = methods().map(m =>
     `<button type="button" class="chip" data-method="${esc(m)}" aria-pressed="${m === pickedMethod}">${esc(m)}</button>`).join("");
-  $("catChips").innerHTML = allCats().map(c =>
+  const cats = income ? INCOME_CATS : allCats();
+  if (!cats.includes(pickedCat)) pickedCat = cats[0];
+  $("catChips").innerHTML = cats.map(c =>
     `<button type="button" class="chip" data-cat="${esc(c)}" aria-pressed="${c === pickedCat}">${esc(c)}</button>`).join("");
+  $("shopLabel").textContent = income ? "どこから（任意）" : "お店（任意）";
+  $("shop").placeholder = income ? "例：会社" : "例：スーパー";
+  $("shopList").innerHTML = [...new Set(state.tx.filter(t => (t.type === "income") === income && t.shop).slice(-200).reverse().map(t => t.shop))]
+    .slice(0, 30).map(s => `<option value="${esc(s)}"></option>`).join("");
   $("editFlag").hidden = !editingTx;
   $("cancelEdit").hidden = !editingTx;
   $("saveTx").textContent = editingTx ? "更新する" : "記録する";
-  $("addTitle").textContent = editingTx ? "記録を編集" : "支出を記録";
+  $("addTitle").textContent = editingTx ? "記録を編集" : (income ? "収入を記録" : "支出を記録");
 }
 
 function renderFixed() {
   const today = todayISO(), m = monthKey(today);
   const active = state.fixed.filter(f => !f.end || f.end >= m);
   const ended = state.fixed.filter(f => f.end && f.end < m);
-  const monthly = active.filter(f => !f.start || f.start <= m).reduce((a, f) => a + Number(f.amt), 0);
+  const current = active.filter(f => !f.start || f.start <= m);
+  const monthly = current.filter(f => f.type !== "income").reduce((a, f) => a + Number(f.amt), 0);
+  const monthlyInc = current.filter(f => f.type === "income").reduce((a, f) => a + Number(f.amt), 0);
   const row = f => {
+    const inc = f.type === "income";
     const isEnded = f.end && f.end < m;
     const day = Number(f.day) >= 31 ? "末日" : `${f.day}日`;
     let actions;
@@ -682,15 +900,16 @@ function renderFixed() {
         + (isEnded || f.end ? "" : `<button class="linkish" data-end-fixed="${esc(f.id)}">今月でやめる</button>`)
         + `<button class="linkish" data-confirm="fx:${esc(f.id)}">削除</button>`;
     }
-    return `<div class="fx ${isEnded ? "ended" : ""}"><span class="n">${esc(f.name)}</span><span class="amt num">${yen(f.amt)}</span>
-      <div class="meta"><span>毎月${day}</span><span>${esc(f.method)}</span><span>${esc(f.cat)}</span>
+    return `<div class="fx ${isEnded ? "ended" : ""}"><span class="n">${esc(f.name)}</span><span class="amt num ${inc ? "pos" : ""}">${inc ? "+" : ""}${yen(f.amt)}</span>
+      <div class="meta"><span>毎月${day}</span>${inc ? `<span class="tag ok">収入</span>` : `<span>${esc(f.method)}</span>`}<span>${esc(f.cat)}</span>
         ${f.start ? `<span>${monthLabel(f.start)}から</span>` : ""}${f.end ? `<span>${monthLabel(f.end)}まで</span>` : ""}${f.memo ? `<span>${esc(f.memo)}</span>` : ""}</div>
       <div class="actions">${actions}</div></div>`;
   };
   $("fixedList").innerHTML = `
     <div class="panel">
-      <div class="label">毎月の固定費</div>
+      <div class="label">毎月の固定費（支出）</div>
       <div class="hero-total num" style="font-size:34px">${Math.round(monthly).toLocaleString("ja-JP")}<small>円</small></div>
+      ${monthlyInc ? `<p class="note" style="margin-top:4px">毎月の固定の収入 <b class="num pos">${yen(monthlyInc)}</b>・固定費を引くと <b class="num">${yen(monthlyInc - monthly)}</b></p>` : ""}
       <div style="margin-top:8px">${active.map(row).join("") || `<div class="empty">まだ固定費はありません。下のフォームから追加できます。</div>`}</div>
       ${ended.length ? `<details style="margin-top:8px"><summary class="note">終わった固定費（${ended.length}件）</summary>${ended.map(row).join("")}</details>` : ""}
     </div>`;
@@ -703,7 +922,7 @@ function renderFixed() {
   };
   sel("fxDay", [...Array.from({ length: 30 }, (_, i) => [i + 1, `${i + 1}日`]), [31, "末日"]]);
   sel("fxMethod", methods().map(x => [x, x]));
-  sel("fxCat", allCats().map(x => [x, x]));
+  sel("fxCat", ($("fxType").value === "income" ? INCOME_CATS : allCats()).map(x => [x, x]));
   if (!$("fxStart").value) $("fxStart").value = m;
   $("fxCancel").hidden = !editingFixed;
   $("fixedFormTitle").textContent = editingFixed ? "固定費を編集" : "固定費を追加";
@@ -736,6 +955,7 @@ function resetTxForm() {
 function resetFixedForm() {
   editingFixed = null;
   ["fxName", "fxAmt", "fxMemo"].forEach(id => ($(id).value = ""));
+  $("fxType").value = "expense";
   $("fxStart").value = monthKey(todayISO());
 }
 function needWritable() {
@@ -752,12 +972,27 @@ document.addEventListener("click", async e => {
   if (d.method !== undefined) { pickedMethod = d.method; renderAddForm(); return; }
   if (d.filter !== undefined) { state.listFilter = d.filter || null; render(); return; }
   if (d.confirm !== undefined) { state.confirm = d.confirm || null; render(); return; }
+  if (d.type) { pickedType = d.type; renderAddForm(); return; }
+  if (d.view) { state.listView = d.view; save("kakeibo.listView", d.view); render(); return; }
+  if (d.day) { state.selectedDay = d.day; state.confirm = null; render(); return; }
+  if (d.monthJump) { state.month = d.monthJump; render(); return; }
+  if (d.addOn) {
+    resetTxForm(); $("date").value = d.addOn; pickedType = "expense";
+    state.tab = "add"; render(); window.scrollTo(0, 0); return;
+  }
+  if (d.nospend !== undefined) {
+    if (!needWritable()) return;
+    const date = todayISO();
+    queue({ action: "upsert", sheet: "tx", rec: { id: newId(), date, month: monthKey(date), amt: 0, cat: "支出なし", method: "", shop: "", memo: "", type: "nospend" } });
+    toast("今日は「使わなかった日」として記録しました"); return;
+  }
 
   if (d.editTx) {
     const r = state.tx.find(x => x.id === d.editTx); if (!r) return;
     editingTx = r.id;
     $("amount").value = Number(r.amt).toLocaleString("ja-JP"); $("date").value = r.date;
     $("shop").value = r.shop || ""; $("memo").value = r.memo || "";
+    pickedType = r.type === "income" ? "income" : "expense";
     pickedCat = r.cat || "その他"; pickedMethod = r.method || "現金";
     state.tab = "add"; render(); window.scrollTo(0, 0); return;
   }
@@ -772,6 +1007,7 @@ document.addEventListener("click", async e => {
     editingFixed = f.id;
     $("fxName").value = f.name; $("fxAmt").value = Number(f.amt).toLocaleString("ja-JP"); $("fxMemo").value = f.memo || "";
     $("fxStart").value = f.start || "";
+    $("fxType").value = f.type === "income" ? "income" : "expense";
     state.tab = "fixed"; render();
     $("fxDay").value = Math.min(Number(f.day) || 1, 31); $("fxMethod").value = f.method; $("fxCat").value = f.cat;
     $("fixedFormPanel").scrollIntoView({ behavior: "smooth", block: "start" }); return;
@@ -835,13 +1071,15 @@ $("saveTx").onclick = () => {
   if (!amt) { toast("金額を入れてください"); $("amount").focus(); return; }
   const date = $("date").value || todayISO();
   const prev = editingTx ? state.tx.find(x => x.id === editingTx) : null;
-  const rec = { ...(prev || {}), id: editingTx || newId(), date, month: monthKey(date), amt, cat: pickedCat, method: pickedMethod,
-    shop: $("shop").value.trim(), memo: $("memo").value.trim() };
-  save(KEY.lastMethod, pickedMethod);
+  const income = pickedType === "income";
+  const rec = { ...(prev || {}), id: editingTx || newId(), date, month: monthKey(date), amt, cat: pickedCat,
+    method: income ? "" : pickedMethod, type: pickedType, shop: $("shop").value.trim(), memo: $("memo").value.trim() };
+  if (!income) save(KEY.lastMethod, pickedMethod);
   const wasEdit = !!editingTx;
   resetTxForm();
   queue({ action: "upsert", sheet: "tx", rec });
-  toast(wasEdit ? "記録を更新しました" : `${yen(amt)}（${rec.method}・${rec.cat}）を記録しました`);
+  toast(wasEdit ? "記録を更新しました" : income ? `収入 ${yen(amt)}（${rec.cat}）を記録しました` : `${yen(amt)}（${rec.method}・${rec.cat}）を記録しました`);
+  pickedType = "expense";
   if (wasEdit) { state.tab = "list"; state.month = rec.month; render(); }
 };
 $("cancelEdit").onclick = () => { resetTxForm(); state.tab = "list"; render(); };
@@ -853,7 +1091,8 @@ $("fxSave").onclick = () => {
   if (!amt) { toast("金額を入れてください"); $("fxAmt").focus(); return; }
   const prev = editingFixed ? state.fixed.find(x => x.id === editingFixed) : null;
   const rec = { ...(prev || {}), id: editingFixed || newId(), name, amt, day: Number($("fxDay").value), method: $("fxMethod").value,
-    cat: $("fxCat").value, start: $("fxStart").value || monthKey(todayISO()), end: prev?.end || "", memo: $("fxMemo").value.trim() };
+    cat: $("fxCat").value, start: $("fxStart").value || monthKey(todayISO()), end: prev?.end || "", memo: $("fxMemo").value.trim(),
+    type: $("fxType").value === "income" ? "income" : "expense" };
   const wasEdit = !!editingFixed;
   resetFixedForm();
   queue({ action: "upsert", sheet: "fixed", rec });
@@ -861,6 +1100,7 @@ $("fxSave").onclick = () => {
   window.scrollTo(0, 0);
 };
 $("fxCancel").onclick = () => { resetFixedForm(); render(); };
+$("fxType").addEventListener("change", () => renderFixed());
 
 $("saveBudget").onclick = async () => {
   if (!needWritable()) return;

@@ -1,5 +1,5 @@
 /**
- * 家計簿アプリのデータ保存係（Googleスプレッドシートに貼り付けて使う）  第2版
+ * 家計簿アプリのデータ保存係（Googleスプレッドシートに貼り付けて使う）  第3版
  *
  * はじめて使うとき:
  *   1. スプレッドシートの「拡張機能」→「Apps Script」を開き、このコードを全部貼り付けて保存
@@ -16,13 +16,13 @@
  * 合言葉がないと、データの読み書きはできません。
  */
 
-const VERSION = 2;
+const VERSION = 3;
 
 const SHEETS = {
-  // 手入力の記録（現金・PayPay・カードなど）
-  tx:       ["id", "date", "month", "shop", "amt", "cat", "method", "memo", "createdAt", "updatedAt"],
-  // 固定費（毎月◯日に◯円）
-  fixed:    ["id", "name", "day", "amt", "cat", "method", "start", "end", "memo"],
+  // 手入力の記録（現金・PayPay・カードなど）。type は expense（支出）/ income（収入）/ nospend（支出なしの日）
+  tx:       ["id", "date", "month", "shop", "amt", "cat", "method", "memo", "createdAt", "updatedAt", "type"],
+  // 固定費（毎月◯日に◯円）。type は expense（支出）/ income（給料などの収入）
+  fixed:    ["id", "name", "day", "amt", "cat", "method", "start", "end", "memo", "type"],
   // PCから送られるカード明細（stmt = どのカードの何月分の明細か）
   cards:    ["stmt", "month", "d", "shop", "amt", "cat", "card", "via", "kind"],
   budget:   ["cat", "amount"],
